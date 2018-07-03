@@ -1,7 +1,7 @@
 package Servlets;
 
 import com.google.maps.model.DistanceMatrix;
-import objects.Node;
+import objects.PointNodeCollection;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.joda.time.format.DateTimeFormat;
@@ -56,16 +56,14 @@ public class EntryPointOne extends HttpServlet {
         String startNode = request.getParameter("startPoint");
         String endNode = request.getParameter("endPoint");
 
-        //First we create our PointNode encapsulator
-        Node nodeEncapsulator = new Node(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone);
+        //First we create our PointNodeCollection which saves common data between nodes and an array of PointNodes
+        PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone);
 
-        // creating  arraylist from points
-        Node.PointNode[] pointNodes = nodeEncapsulator.setupPointNodes(points, startNode, endNode);
+        // we setup our PointNode arraylist inside our pointNodeCollection
+        pointNodeCollection.setupPointNodes(points, startNode, endNode);
 
-        DistanceMatrix distanceMatrix = GoogleMapsApi.getDistances(pointNodes);
-        if (distanceMatrix != null) {
-            ShortestPath.getShortestPath(distanceMatrix, points);
-        }
+        //we get our shortest path
+        ShortestPath.getShortestPath(pointNodeCollection);
 
         //creating our output
         PrintWriter out = response.getWriter();

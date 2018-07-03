@@ -6,15 +6,16 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 
-//Node class that encapsulates PointNode class so that all PointNode instances share the same "global" variables (timeParam, hierarchyParam, packagesParam and timeZone)
+//PointNodeCollection class that encapsulates PointNode class so that all PointNode instances share the same "global" variables (timeParam, hierarchyParam, packagesParam and timeZone)
 //whithout the need to create static variables since this global variables should only be common within the same thread and not between threads as static variables do
-public class Node {
+public class PointNodeCollection {
     //public variabes pertaining to all the point nodes
     public boolean timeParam, hierarchyParam, packagesParam;
     public String timeZone;
+    public PointNode[] pointNodes;
 
 
-    public Node(boolean timeParam, boolean hierarchyParam, boolean packagesParam, String timeZone) {
+    public PointNodeCollection(boolean timeParam, boolean hierarchyParam, boolean packagesParam, String timeZone) {
         this.timeParam = timeParam;
         this.hierarchyParam = hierarchyParam;
         this.packagesParam = packagesParam;
@@ -23,6 +24,7 @@ public class Node {
 
     public class PointNode{
 
+        private String latLngStr; //latitude and longitude in string format
         private LatLng latLng; //latitude and longitude of the point
         private DateTime arrivalTime; //time at which it should arrive
         private Integer hierarchy; //hierarchy of the visit
@@ -55,6 +57,7 @@ public class Node {
             commaPos = rawString.indexOf(',');
             float lat = Float.parseFloat(rawString.substring(0, commaPos));
             float lng = Float.parseFloat(rawString.substring(commaPos + 1, paramDivisor));
+            latLngStr = rawString.substring(0, paramDivisor);
             latLng = new LatLng(lat, lng);
 
             //if there's a time param we set it up
@@ -102,6 +105,14 @@ public class Node {
 
         }
 
+        public String getLatLngStr() {
+            return latLngStr;
+        }
+
+        public void setLatLngStr(String latLngStr) {
+            this.latLngStr = latLngStr;
+        }
+
         public LatLng getLatLng() {
             return latLng;
         }
@@ -130,7 +141,7 @@ public class Node {
 
 
     //method that sets up a array of point nodes according to the string nodes that we sent it
-    public PointNode[] setupPointNodes(String[] stringNodes, String startNode, String endNode) {
+    public void setupPointNodes(String[] stringNodes, String startNode, String endNode) {
         int size = stringNodes.length;
 
         if(startNode != null)
@@ -139,7 +150,7 @@ public class Node {
         if(endNode != null)
             size++;
 
-        PointNode[] pointNodes = new PointNode[size];
+        pointNodes = new PointNode[size];
 
         int i = 0;
         for(; i < stringNodes.length; i++){
@@ -152,6 +163,5 @@ public class Node {
         if(endNode != null)
             pointNodes[++i] = new PointNode(startNode, false, true);
 
-        return pointNodes;
     }
 }

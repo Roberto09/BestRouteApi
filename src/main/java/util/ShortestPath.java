@@ -5,6 +5,7 @@ import com.google.ortools.constraintsolver.Assignment;
 import com.google.ortools.constraintsolver.NodeEvaluator2;
 import com.google.ortools.constraintsolver.RoutingModel;
 import com.google.ortools.constraintsolver.RoutingSearchParameters;
+import objects.PointNodeCollection;
 
 public class ShortestPath {
     static { System.load("/home/roberto/Desktop/Tests/Test7/target/classes/libjniortools.so"); }
@@ -24,7 +25,8 @@ public class ShortestPath {
 
     }
 
-    public static void getShortestPath(DistanceMatrix distanceMatrix, String[]points){
+    public static void getShortestPath(PointNodeCollection pointNodeCollection){
+        DistanceMatrix distanceMatrix = GoogleMapsApi.getDistances(pointNodeCollection);
         int tspSize = distanceMatrix.destinationAddresses.length;
         int numRoutes = 1;
 
@@ -42,11 +44,11 @@ public class ShortestPath {
                 long index = routing.start(routeNumber);
                 while(!routing.isEnd(index)){
                     route += distanceMatrix.destinationAddresses[routing.IndexToNode(index)] + " -> ";
-                    route2 += points[routing.IndexToNode(index)] + " -> ";
+                    route2 += pointNodeCollection.pointNodes[routing.IndexToNode(index)].getLatLngStr() + " -> ";
                     index = assignment.value(routing.nextVar(index));
                 }
                 route += distanceMatrix.destinationAddresses[routing.IndexToNode(index)];
-                route2 += points[routing.IndexToNode(index)];
+                route2 += pointNodeCollection.pointNodes[routing.IndexToNode(index)].getLatLngStr();
                 System.out.println("Route: " + route);
                 System.out.println("Route2: " + route2);
             }

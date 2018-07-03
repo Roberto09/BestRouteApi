@@ -7,7 +7,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
-import objects.Node;
+import objects.PointNodeCollection;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -20,20 +20,20 @@ public class GoogleMapsApi {
         context = new GeoApiContext.Builder().apiKey(apiKey).build(); }
 
 
-    public static LatLng[] getLatLngFromPointNodes (Node.PointNode[] pointNodes){
-        LatLng[] latLngs = new LatLng[pointNodes.length];
-        for(int i = 0; i < pointNodes.length; i++){
-            latLngs[i] = pointNodes[i].getLatLng();
+    public static LatLng[] getLatLngFromPointNodes (PointNodeCollection pointNodeCollection){
+        LatLng[] latLngs = new LatLng[pointNodeCollection.pointNodes.length];
+        for(int i = 0; i < pointNodeCollection.pointNodes.length; i++){
+            latLngs[i] = pointNodeCollection.pointNodes[i].getLatLng();
         }
         return latLngs;
     }
 
 
-    public static DistanceMatrix getDistances(Node.PointNode[] pointNodes){
+    public static DistanceMatrix getDistances(PointNodeCollection pointNodeCollection){
 
         try{
             LatLng[] origins, destinations;
-            origins = getLatLngFromPointNodes(pointNodes);
+            origins = getLatLngFromPointNodes(pointNodeCollection);
             destinations = origins;
             DistanceMatrixApiRequest request = DistanceMatrixApi.newRequest(context).mode(TravelMode.DRIVING);
             request.origins(origins);
@@ -47,8 +47,8 @@ public class GoogleMapsApi {
             System.out.print(distanceMatrix.toString());
             System.out.println("------------");
 
-            for(int i = 0; i < pointNodes.length; i++){
-                for(int j = 0; j < pointNodes.length; j++){
+            for(int i = 0; i < pointNodeCollection.pointNodes.length; i++){
+                for(int j = 0; j < pointNodeCollection.pointNodes.length; j++){
                     System.out.println(distanceMatrix.rows[i].elements[j].durationInTraffic.inSeconds);
                 }
             }
