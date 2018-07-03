@@ -2,7 +2,6 @@ package Servlets;
 
 import com.google.maps.model.DistanceMatrix;
 import objects.Node;
-import objects.PointNode;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.joda.time.format.DateTimeFormat;
@@ -28,6 +27,7 @@ public class EntryPointOne extends HttpServlet {
         boolean pointTimeParameters = false;
         boolean pointHierarchyParameters = false;
         boolean pointPackageParameters = false;
+        String timeZone = null;
 
         //setup timezone param
 
@@ -40,6 +40,7 @@ public class EntryPointOne extends HttpServlet {
             for(int i = 0; i < pathParams.length; i++){
                 if (pathParams[i] == "time"){
                     pointTimeParameters = true;
+                    timeZone = request.getParameter("timeZone");
                 }
                 if (pathParams[i].equals("hierarchy")) {
                     pointHierarchyParameters = true;
@@ -55,8 +56,12 @@ public class EntryPointOne extends HttpServlet {
         String startNode = request.getParameter("startPoint");
         String endNode = request.getParameter("endPoint");
 
+        //First we create our PointNode encapsulator
+        Node nodeEncapsulator = new Node(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone);
+
         // creating  arraylist from points
-        PointNode[] pointNodes = PointNode.setupPointNodes(points, startNode, endNode,pointTimeParameters, pointHierarchyParameters, pointPackageParameters, "PST");
+        Node.PointNode[] pointNodes = nodeEncapsulator.setupPointNodes(points, startNode, endNode);
+
         DistanceMatrix distanceMatrix = GoogleMapsApi.getDistances(pointNodes);
         if (distanceMatrix != null) {
             ShortestPath.getShortestPath(distanceMatrix, points);
@@ -75,15 +80,5 @@ public class EntryPointOne extends HttpServlet {
 
         int minutes = Minutes.minutesBetween(x, x2).getMinutes();
         System.out.println(minutes);
-
-        //--------Test-----------
-
-        Node node = new Node(2);
-        node.x += Integer.parseInt(request.getParameter("sum"));
-
-
-        Node.TestPNode x = node.new TestPNode("test", 4);
-
-
     }
 }

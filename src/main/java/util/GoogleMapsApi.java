@@ -7,7 +7,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
-import objects.PointNode;
+import objects.Node;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -20,7 +20,7 @@ public class GoogleMapsApi {
         context = new GeoApiContext.Builder().apiKey(apiKey).build(); }
 
 
-    public static LatLng[] getLatLngFromPointNodes (PointNode[] pointNodes){
+    public static LatLng[] getLatLngFromPointNodes (Node.PointNode[] pointNodes){
         LatLng[] latLngs = new LatLng[pointNodes.length];
         for(int i = 0; i < pointNodes.length; i++){
             latLngs[i] = pointNodes[i].getLatLng();
@@ -29,7 +29,7 @@ public class GoogleMapsApi {
     }
 
 
-    public static DistanceMatrix getDistances(PointNode[] pointNodes){
+    public static DistanceMatrix getDistances(Node.PointNode[] pointNodes){
 
         try{
             LatLng[] origins, destinations;
