@@ -29,7 +29,7 @@ public class GoogleMapsApi {
     }
 
 
-    public static DistanceMatrix getDistances(PointNodeCollection pointNodeCollection){
+    public static DistanceMatrix getDistanceAndTimeMatrix(PointNodeCollection pointNodeCollection){
 
         try{
             LatLng[] origins, destinations;
