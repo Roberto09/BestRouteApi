@@ -15,9 +15,9 @@ public class PointNodeCollection {
     //public variabes pertaining to all the point nodes
     public boolean timeParam = false, hierarchyParam = false, packagesParam = false;
     public String timeZone = "GMT";
-    public boolean routeHasStartNode = false; //if there's not one specified it is the depot
-    public boolean routeHasEndNode = false; //if there's not one specified it is the depot
-
+    public boolean routeHasStartNode = false; //if there's not one specified it is the first node in the regular points list
+    public boolean routeHasEndNode = false; //if there's not one specified it is the first node in the regular points list
+    public int routeStartPosition = 0, routeEndPosition = 0; //position in PointNodes array of the start and end point of the route(s)
     //array of point nodes
     public PointNode[] pointNodes;
 
@@ -96,6 +96,7 @@ public class PointNodeCollection {
                     paramDivisor = rawString.length();
 
                 this.hierarchy = Integer.parseInt(rawString.substring(0, paramDivisor));
+                System.out.print("Hierarchy: " + hierarchy);
             }
 
             //if there's a packagesParam we set it up
@@ -250,13 +251,21 @@ public class PointNodeCollection {
         int i = 0;
         //Note, here we are saving the start node int the position #0 of the array
         //this is important to calculate the shortest path since our method will use this point as start point
-        if(routeHasStartNode)
-            pointNodes[i++] = new PointNode(startNode, true, false);
+        if(routeHasStartNode) {
+            pointNodes[i] = new PointNode(startNode, true, false);
+            routeStartPosition = i++;
+            if(!routeHasEndNode)
+                routeEndPosition = 1;
+        }
 
         //Note, here we are saving the start node int the position #1 of the array
         //this is important to calculate the shortest path since our method will use this point as start point
-        if(routeHasEndNode)
-            pointNodes[i++] = new PointNode(endNode, false, true);
+        if(routeHasEndNode) {
+            pointNodes[i] = new PointNode(endNode, false, true);
+            routeEndPosition = i++;
+            if(!routeHasStartNode)
+                routeStartPosition = 1;
+        }
 
         for(int j = 0; j < stringNodes.length; j++, i++){
             pointNodes[i] = new PointNode(stringNodes[j],false, false);
@@ -275,16 +284,23 @@ public class PointNodeCollection {
         pointNodes = new PointNode[size];
 
         int i = 0;
-        //Note, here we are saving the start node int the position #0 of the array
+        //Note, here we are saving the start node in the position #0 of the array
         //this is important to calculate the shortest path since our method will use this point as start point
         //String latLngStr, String arrivalTime, Integer hierarchy, boolean isStart, boolean isEnd, String packageStr
-        if(routeHasStartNode)
-            pointNodes[i++] = new PointNode(startNode, true, false);
-
+        if(routeHasStartNode){
+            pointNodes[i] = new PointNode(startNode, true, false);
+            routeStartPosition = i++;
+            if(!routeHasEndNode)
+                routeEndPosition = 1;
+        }
         //Note, here we are saving the start node int the position #1 of the array
         //this is important to calculate the shortest path since our method will use this point as start point
-        if(routeHasEndNode)
-            pointNodes[i++] = new PointNode(endNode, false, true);
+        if(routeHasEndNode) {
+            pointNodes[i] = new PointNode(endNode, false, true);
+            routeEndPosition = i++;
+            if(!routeHasStartNode)
+                routeStartPosition = 1;
+        }
 
         for(int j = 0; j < nodes.length(); j++, i++){
             pointNodes[i] = new PointNode(nodes.getJSONObject(j), false, false);

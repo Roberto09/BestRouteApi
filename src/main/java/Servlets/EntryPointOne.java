@@ -28,9 +28,16 @@ public class EntryPointOne extends HttpServlet {
         boolean pointPackageParameters = false;
         boolean routeHasStartNode = false;
         boolean routeHasEndNode = false;
+
+        //setup of generic point independent variables
         String timeZone = null;
         TransportationVehicle vehicle = null;
+        JSONObject startNode = null;
+        JSONObject endNode = null;
+
+        //request variables
         JSONObject jsonRequest = null;
+        StringBuffer jb = new StringBuffer();
 
         //setup the pathParams info
         String info = request.getPathInfo();
@@ -52,7 +59,6 @@ public class EntryPointOne extends HttpServlet {
         }
 
         //receiving incoming Json
-        StringBuffer jb = new StringBuffer();
         String line = null;
         try {
             BufferedReader reader = request.getReader();
@@ -71,27 +77,24 @@ public class EntryPointOne extends HttpServlet {
 
         //Getting out timezone
         if(pointTimeParameters){
-            timeZone = jsonRequest.getString("TimeZone");
+            timeZone = jsonRequest.getString("timeZone");
         }
-
         //Getting out vehicle info
         if(pointPackageParameters){
-            Long vehicleCapacity = jsonRequest.getLong("VehicleCapacity");
-            if(vehicleCapacity != null)
-                vehicle = new TransportationVehicle(vehicleCapacity);
+            Long vehicleCapacity = jsonRequest.getLong("vehicleCapacity");
+            Integer numberOfVehicles = jsonRequest.getInt("numberOfVehicles");
+            vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
         }
 
         //Seeing if the client added a start node and or an endnode
-        JSONObject startNode = null;
-        JSONObject endNode = null;
 
-        if(jsonRequest.has("StartNode")) {
-            startNode = jsonRequest.getJSONObject("SartNode");
+        if(jsonRequest.has("startPoint")) {
+            startNode = jsonRequest.getJSONObject("startPoint");
             routeHasStartNode = true;
         }
 
-        if(jsonRequest.has("EndNode")) {
-            endNode = jsonRequest.getJSONObject("EndNode");
+        if(jsonRequest.has("endPoint")) {
+            endNode = jsonRequest.getJSONObject("endPoint");
             routeHasEndNode = true;
         }
 
@@ -114,6 +117,8 @@ public class EntryPointOne extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        ShortestPath.showLibraryPaths();
+
         //setup the boolean variables regarding the request
         boolean pointTimeParameters = false;
         boolean pointHierarchyParameters = false;
@@ -124,6 +129,8 @@ public class EntryPointOne extends HttpServlet {
         //setup of generic point independent variables
         String timeZone = null;
         TransportationVehicle vehicle = null;
+        String startNode;
+        String endNode;
 
         //setup the pathParams info
         String info = request.getPathInfo();
@@ -142,17 +149,27 @@ public class EntryPointOne extends HttpServlet {
                 }
                 if (pathParams[i].equals("packages")) {
                     pointPackageParameters = true;
-                    String vehicleCapacity = request.getParameter("vehicleCapacity");
-                    if(vehicleCapacity!= null)
-                        vehicle = new TransportationVehicle(Long.parseLong(vehicleCapacity));
+                    String vehicleCapacityStr = request.getParameter("vehicleCapacity");
+                    String numberOfVehiclesStr = request.getParameter("numberOfVehicles");
+                    Long vehicleCapacity = null;
+                    Integer numberOfVehicles = null;
+
+                    if(vehicleCapacityStr != null)
+                        vehicleCapacity = Long.parseLong(vehicleCapacityStr);
+
+                    if(numberOfVehiclesStr != null)
+                        numberOfVehicles = Integer.parseInt(numberOfVehiclesStr);
+
+                    vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
+
                 }
             }
         }
 
         //getting points
         String points[] = request.getParameterValues("point");
-        String startNode = request.getParameter("startPoint");
-        String endNode = request.getParameter("endPoint");
+        startNode = request.getParameter("startPoint");
+        endNode = request.getParameter("endPoint");
 
         //Seeing if the client added a start node and or an endnode
         if(startNode != null)
