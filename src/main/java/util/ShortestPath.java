@@ -14,9 +14,10 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class ShortestPath {
-    //static { System.load("/home/roberto/Desktop/Tests/Test7/target/classes/libjniortools.so"); }
 
-    static {System.loadLibrary("jniortools");}
+    //static {System.loadLibrary("jniortools");}
+
+    static { System.load("/home/roberto/Desktop/Tests/Test7/target/classes/libjniortools.so"); }
 
     public static void showLibraryPaths(){
         String property = System.getProperty("java.library.path");
@@ -27,7 +28,20 @@ public class ShortestPath {
     }
 
 
-    //Distance callback which returns the distance between two given points
+    //Method that creates Json Object with node in route information
+    private static JSONObject createNodeJson(String latLng, String name, Integer hierarchy, Integer packageUnities){
+        JSONObject object = new JSONObject();
+        object.put("latLng", latLng);
+        object.put("name", name);
+        if(hierarchy != null)
+            object.put("hierarchy", hierarchy);
+        if(packageUnities != null)
+            object.put("packageUnities", packageUnities);
+        return object;
+    }
+
+
+    //Distance callback which returns the time between two given points
     public static class CreateTimeCallback extends NodeEvaluator2 {
         DistanceMatrix distanceAndTimeMatrix;
 
@@ -105,18 +119,14 @@ public class ShortestPath {
     //get shortest path method which calculates the shortest path for the given points and conditions sent by the client
     public static JSONObject getShortestPath(PointNodeCollection pointNodeCollection, TransportationVehicle vehicle){
 
-        //Creating Json Response and success attribute
-        JSONObject result = new JSONObject();
-        boolean success = false;
-
         DistanceMatrix distanceAndTimeMatrix = GoogleMapsApi.getDistanceAndTimeMatrix(pointNodeCollection);
 
-        int tspSize = distanceAndTimeMatrix.destinationAddresses.length;
+        int routingSize = distanceAndTimeMatrix.destinationAddresses.length;
         int numRoutes = vehicle.getNumberOfVehicles();
 
         //start point and return of the vehicles ins the routing
         int depot = 0;
-        if(tspSize > 0) {
+        if(routingSize > 0) {
             //creating and seting up basic Routing Model
             RoutingModel routing;
 
@@ -127,7 +137,7 @@ public class ShortestPath {
             System.out.print("n vehicles: " + vehicle.getNumberOfVehicles() + " ----- startPoint: " + pointNodeCollection.routeStartPosition + " --------- endpoint" + pointNodeCollection.routeEndPosition);
 
             //setting up routing start nodes and end nodes according to client request
-            routing = new RoutingModel(tspSize, numRoutes, startNodesPositionArray, endNodesPositionArray);
+            routing = new RoutingModel(routingSize, numRoutes, startNodesPositionArray, endNodesPositionArray);
 
             //Creating search parameters for the routing model and seting the callback for the distance/time between nodes
             RoutingSearchParameters searchParameters = RoutingSearchParameters.newBuilder()
@@ -147,75 +157,8 @@ public class ShortestPath {
             //executing routing model and printing results
             Assignment assignment = routing.solveWithParameters(searchParameters);
             if(assignment != null){
-
-                //setting success to true
-                success = true;
-                long totalDuration = 0;
-
-
-                //getting solution dimentions for further inspection
-                RoutingDimension capacityDimension = routing.getDimensionOrDie("Capacity");
-
-                //for loop to get the best path for each route
-                for(int routeNum = 0; routeNum < numRoutes; routeNum ++) {
-                    JSONArray routeAddresses = new JSONArray();
-                    JSONArray routeLatLng = new JSONArray();
-
-                    StringBuffer vehicleLoad = new StringBuffer();
-
-                    long routeDuration  = 0;
-
-                    long index = routing.start(routeNum);
-
-                    while (!routing.isEnd(index)) {
-                        //getting index of the routing node
-                        int nodeIndex = routing.IndexToNode(index);
-                        //getting index of the next routing node
-                        int nextNodeIndex = routing.IndexToNode(assignment.value(routing.nextVar(index)));
-
-                        //adding our route duration the duration in seconds of the nodeIndex to the nextNodeIndex;
-                        routeDuration += distanceAndTimeMatrix.rows[nodeIndex].elements[nextNodeIndex].durationInTraffic.inSeconds;
-
-                        //adding the address to our route addresses array
-                        routeAddresses.put(distanceAndTimeMatrix.destinationAddresses[nodeIndex]);
-                        //adding the latLng to our route latLng array
-                        routeLatLng.put(pointNodeCollection.pointNodes[nodeIndex].getLatLngStr());
-
-                        //adding to our route load
-                        IntVar loadVar2 = capacityDimension.cumulVar(index);
-                        Long routeLoad = assignment.value(loadVar2);
-                        vehicleLoad.append(routeLoad).append("->");
-
-                        //updating our index
-                        index = assignment.value(routing.nextVar(index));
-                    }
-                    //adding to our totalDuration
-                    totalDuration += routeDuration;
-
-                    //adding the last node adress and latLng to their arrays (such as done in the while loop)
-                    routeAddresses.put(distanceAndTimeMatrix.destinationAddresses[routing.IndexToNode(index)]);
-                    routeLatLng.put(pointNodeCollection.pointNodes[routing.IndexToNode(index)].getLatLngStr());
-
-                    //adding to our route load
-                    IntVar loadVar2 = capacityDimension.cumulVar(index);
-                    Long routeLoad = assignment.value(loadVar2);
-                    vehicleLoad.append(routeLoad);
-
-                    //Setting up json route object
-                    JSONObject route = new JSONObject();
-
-                    //setting total duration
-                    route.put("duration:", routeDuration);
-                    route.put("routeAddresses", routeAddresses);
-                    route.put("routeLatLng", routeLatLng);
-
-                    //adding route to the json result
-                    result.put("route" + Integer.toString(routeNum), route);
-
-                    System.out.println(vehicleLoad);
-                }
-                result.put("Total Duration", totalDuration);
-                System.out.println("Total duration: " + totalDuration + " ---- Objective Value: " + assignment.objectiveValue());
+                //getting results and returning them
+                return getJsonResults(routing, assignment, numRoutes, distanceAndTimeMatrix, pointNodeCollection);
             }
             else {
                 System.out.println("No solution found");
@@ -224,8 +167,103 @@ public class ShortestPath {
         else
             System.out.println("Specify an instance greater than 0");
 
-        //returning result and adding success status
-        result.put("success", success);
+        //returning result if something failed and adding success status
+        JSONObject result = new JSONObject();
+        result.put("success", false);
+        return result;
+    }
+
+    //get Json Results method which allows us to translate our results to a final json that will be returned to the user in the getShortestPath method
+    private static JSONObject getJsonResults(RoutingModel routing, Assignment assignment, int numRoutes, DistanceMatrix distanceAndTimeMatrix, PointNodeCollection pointNodeCollection){
+        //creating our json object
+        JSONObject result = new JSONObject();
+
+        //setting success to true
+        long totalDuration = 0;
+
+        //getting solution dimentions for further inspection
+        RoutingDimension capacityDimension = routing.getDimensionOrDie("Capacity");
+
+        //for loop to get the best path for each route
+        for(int routeNum = 0; routeNum < numRoutes; routeNum ++) {
+            JSONArray routeResults = new JSONArray();
+
+            StringBuffer vehicleLoad = new StringBuffer();
+            long routeDuration  = 0;
+            long index = routing.start(routeNum);
+
+            //individual route variables
+            String latLng = null;
+            String name = null;
+            Integer hierarchy = null;
+            Integer packageUnities = null;
+            Integer nodeIndex = null;
+            Integer nextNodeIndex = null;
+
+            while (!routing.isEnd(index)) {
+                //getting index of the routing node
+                nodeIndex = routing.IndexToNode(index);
+                //getting index of the next routing node
+                nextNodeIndex = routing.IndexToNode(assignment.value(routing.nextVar(index)));
+
+                //adding our route duration the duration in seconds of the nodeIndex to the nextNodeIndex;
+                routeDuration += distanceAndTimeMatrix.rows[nodeIndex].elements[nextNodeIndex].durationInTraffic.inSeconds;
+
+                //setting our name
+                name = distanceAndTimeMatrix.destinationAddresses[nodeIndex];
+                //setting our latLng
+                latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
+                //setting our hierarchy
+                hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
+                //setting out package unities
+                packageUnities = pointNodeCollection.pointNodes[nodeIndex].getPackageWeight();
+                //adding resultNode to our routeResults
+                routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities));
+
+                //adding to our route load
+                IntVar loadVar2 = capacityDimension.cumulVar(index);
+                Long routeLoad = assignment.value(loadVar2);
+                vehicleLoad.append(routeLoad).append("->");
+
+                //updating our index
+                index = assignment.value(routing.nextVar(index));
+            }
+            //adding to our totalDuration
+            totalDuration += routeDuration;
+
+            //setting our nodeIndex variable to our last node
+            nodeIndex = routing.IndexToNode(index);
+            //setting out name
+            name = distanceAndTimeMatrix.destinationAddresses[nodeIndex];
+            //setting our latLng
+            latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
+            //setting our hierarchy
+            hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
+            //setting out package unities
+            packageUnities = pointNodeCollection.pointNodes[nodeIndex].getPackageWeight();
+            //adding resultNode to our routeResults
+            routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities));
+
+            //adding to our route load
+            IntVar loadVar2 = capacityDimension.cumulVar(index);
+            Long routeLoad = assignment.value(loadVar2);
+            vehicleLoad.append(routeLoad);
+
+            //Setting up json route object
+            JSONObject route = new JSONObject();
+
+            //setting total duration
+            route.put("duration:", routeDuration);
+            route.put("route", routeResults);
+
+            //adding route to the json result
+            result.put("route" + Integer.toString(routeNum), route);
+
+            System.out.println(vehicleLoad);
+        }
+        result.put("total Duration", totalDuration);
+        result.put("success", true);
+        System.out.println("Total duration: " + totalDuration + " ---- Objective Value: " + assignment.objectiveValue());
         return result;
     }
 }
