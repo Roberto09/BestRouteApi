@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 public class EntryPointOne extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -189,7 +190,7 @@ public class EntryPointOne extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.print(returnResponse);
         out.flush();
-
+        /*
         String formatedDatetime = "01/01/2018 10:00:00 PST";
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
         DateTime x = formatter.parseDateTime(formatedDatetime);
@@ -199,5 +200,13 @@ public class EntryPointOne extends HttpServlet {
 
         int minutes = Minutes.minutesBetween(x, x2).getMinutes();
         System.out.println(minutes);
+
+        */
+        String formatedDatetime = "01/01/2018 10:00:00 PST";
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
+        DateTime x = formatter.parseDateTime(formatedDatetime);
+        System.out.println("Epoch time: " + x.getMillis() / 1000);
+        System.out.println("Current time not epoch" + DateTime.now());
+
     }
 }

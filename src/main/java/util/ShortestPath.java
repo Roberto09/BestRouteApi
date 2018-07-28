@@ -29,14 +29,15 @@ public class ShortestPath {
 
 
     //Method that creates Json Object with node in route information
-    private static JSONObject createNodeJson(String latLng, String name, Integer hierarchy, Integer packageUnities){
+    private static JSONObject createNodeJson(String latLng, String name, Integer hierarchy, Long packageUnities, Long time){
         JSONObject object = new JSONObject();
         object.put("latLng", latLng);
         object.put("name", name);
+        object.put("secondsElapsed", time);
         if(hierarchy != null)
             object.put("hierarchy", hierarchy);
         if(packageUnities != null)
-            object.put("packageUnities", packageUnities);
+            object.put("packageLoad", packageUnities);
         return object;
     }
 
@@ -184,11 +185,10 @@ public class ShortestPath {
         //getting solution dimentions for further inspection
         RoutingDimension capacityDimension = routing.getDimensionOrDie("Capacity");
 
+
         //for loop to get the best path for each route
         for(int routeNum = 0; routeNum < numRoutes; routeNum ++) {
             JSONArray routeResults = new JSONArray();
-
-            StringBuffer vehicleLoad = new StringBuffer();
             long routeDuration  = 0;
             long index = routing.start(routeNum);
 
@@ -196,34 +196,32 @@ public class ShortestPath {
             String latLng = null;
             String name = null;
             Integer hierarchy = null;
-            Integer packageUnities = null;
+            Long packageUnities = null;
             Integer nodeIndex = null;
             Integer nextNodeIndex = null;
-
             while (!routing.isEnd(index)) {
                 //getting index of the routing node
                 nodeIndex = routing.IndexToNode(index);
                 //getting index of the next routing node
                 nextNodeIndex = routing.IndexToNode(assignment.value(routing.nextVar(index)));
 
-                //adding our route duration the duration in seconds of the nodeIndex to the nextNodeIndex;
-                routeDuration += distanceAndTimeMatrix.rows[nodeIndex].elements[nextNodeIndex].durationInTraffic.inSeconds;
-
                 //setting our name
                 name = distanceAndTimeMatrix.destinationAddresses[nodeIndex];
+
                 //setting our latLng
                 latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
+
                 //setting our hierarchy
                 hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
-                //setting out package unities
-                packageUnities = pointNodeCollection.pointNodes[nodeIndex].getPackageWeight();
-                //adding resultNode to our routeResults
-                routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities));
 
-                //adding to our route load
+                //setting out package unities (cumul + transit var)
                 IntVar loadVar2 = capacityDimension.cumulVar(index);
-                Long routeLoad = assignment.value(loadVar2);
-                vehicleLoad.append(routeLoad).append("->");
+                packageUnities = assignment.value(loadVar2);
+
+                //adding resultNode to our routeResults
+                routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));
+                //adding our route duration the duration in seconds of the nodeIndex to the nextNodeIndex;
+                routeDuration += distanceAndTimeMatrix.rows[nodeIndex].elements[nextNodeIndex].durationInTraffic.inSeconds;
 
                 //updating our index
                 index = assignment.value(routing.nextVar(index));
@@ -233,21 +231,22 @@ public class ShortestPath {
 
             //setting our nodeIndex variable to our last node
             nodeIndex = routing.IndexToNode(index);
+
             //setting out name
             name = distanceAndTimeMatrix.destinationAddresses[nodeIndex];
+
             //setting our latLng
             latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
+
             //setting our hierarchy
             hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
-            //setting out package unities
-            packageUnities = pointNodeCollection.pointNodes[nodeIndex].getPackageWeight();
-            //adding resultNode to our routeResults
-            routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities));
 
-            //adding to our route load
+            //setting out package unities ---transit var would be 0 since there's not a node after the last one
             IntVar loadVar2 = capacityDimension.cumulVar(index);
-            Long routeLoad = assignment.value(loadVar2);
-            vehicleLoad.append(routeLoad);
+            packageUnities = assignment.value(loadVar2);
+
+            //adding resultNode to our routeResults
+            routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));
 
             //Setting up json route object
             JSONObject route = new JSONObject();
@@ -258,8 +257,6 @@ public class ShortestPath {
 
             //adding route to the json result
             result.put("route" + Integer.toString(routeNum), route);
-
-            System.out.println(vehicleLoad);
         }
         result.put("total Duration", totalDuration);
         result.put("success", true);
