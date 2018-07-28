@@ -6,13 +6,13 @@
     </artifacts-to-build>
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" line="81" />
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" description="        int i = 0;&#10;        //Note, here we are sav..." line="250" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" line="82" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" description="        int i = 0;&#10;        //Note, here we are sav..." line="249" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7593c1b1-4726-425c-9bf6-8e5824e7b113" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/util/ShortestPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/ShortestPath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/util/TimeFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/TimeFunctions.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -43,7 +43,7 @@
       <file leaf-file-name="ShortestPath.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/util/ShortestPath.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
+            <state relative-caret-position="62">
               <caret line="177" column="183" selection-start-line="177" selection-start-column="183" selection-end-line="177" selection-end-column="183" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -61,11 +61,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EntryPointOne.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PointNodeCollection.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="83" column="92" selection-start-line="83" selection-start-column="92" selection-end-line="83" selection-end-column="92" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#9392#9393#0" expanded="true" />
+                <element signature="e#9436#9437#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EntryPointOne.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="29">
-              <caret line="188" column="79" selection-start-line="188" selection-start-column="79" selection-end-line="188" selection-end-column="79" />
+            <state relative-caret-position="151">
+              <caret line="85" column="54" selection-start-line="85" selection-start-column="46" selection-end-line="85" selection-end-column="54" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -73,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TimeFunctions.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="TimeFunctions.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/util/TimeFunctions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
+            <state relative-caret-position="57">
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -125,11 +139,12 @@
       <find>index</find>
       <find>capacityDimension</find>
       <find>routeDuration</find>
-      <find>DateTime</find>
       <find>vehicleCapacity</find>
       <find>System.out.</find>
-      <find>packageUnities</find>
       <find>vehicle</find>
+      <find>DateTime</find>
+      <find>timeZone</find>
+      <find>packageUnities</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -147,12 +162,12 @@
         <option value="$PROJECT_DIR$/src/main/java/objects/Node.java" />
         <option value="$PROJECT_DIR$/src/main/java/util/GoogleMapsApi.java" />
         <option value="$PROJECT_DIR$/src/main/java/objects/TransportationVehicle.java" />
-        <option value="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" />
         <option value="$PROJECT_DIR$/src/main/java/util/NativeUtils.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/util/ShortestPath.java" />
-        <option value="$PROJECT_DIR$/src/main/java/util/TimeFunctions.java" />
         <option value="$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" />
+        <option value="$PROJECT_DIR$/src/main/java/util/TimeFunctions.java" />
+        <option value="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" />
       </list>
     </option>
   </component>
@@ -448,7 +463,7 @@
       <workItem from="1531960791917" duration="7644000" />
       <workItem from="1532653824169" duration="36503000" />
       <workItem from="1532728447837" duration="574000" />
-      <workItem from="1532729677765" duration="9756000" />
+      <workItem from="1532729677765" duration="12670000" />
     </task>
     <task id="LOCAL-00001" summary="changed code structure so it could be more moldeable and understandable">
       <created>1530580067130</created>
@@ -475,7 +490,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="225734000" />
+    <option name="totallyTimeSpent" value="228648000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -509,7 +524,7 @@
       <window_info anchor="bottom" id="Java Enterprise" order="10" weight="0.32901832" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Version Control" order="12" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.82127196" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.75877196" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3267544" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49885845" visible="true" weight="0.18423855" />
       <window_info id="Web" order="6" sideWeight="0.50114155" side_tool="true" weight="0.22350675" />
@@ -845,22 +860,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2016">
-          <caret line="177" column="6" selection-start-line="177" selection-start-column="6" selection-end-line="177" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#9392#9393#0" expanded="true" />
-            <element signature="e#9436#9437#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="456">
           <caret line="38" column="35" selection-start-line="38" selection-start-column="35" selection-end-line="38" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar!/javax/servlet/http/HttpServlet.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="85" column="54" selection-start-line="85" selection-start-column="46" selection-end-line="85" selection-end-column="54" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -874,16 +894,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar!/javax/servlet/http/HttpServlet.class">
+    <entry file="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
+        <state relative-caret-position="147">
+          <caret line="83" column="92" selection-start-line="83" selection-start-column="92" selection-end-line="83" selection-end-column="92" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#9392#9393#0" expanded="true" />
+            <element signature="e#9436#9437#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/ShortestPath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
+        <state relative-caret-position="62">
           <caret line="177" column="183" selection-start-line="177" selection-start-column="183" selection-end-line="177" selection-end-column="183" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -902,18 +927,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/TimeFunctions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="29">
-          <caret line="188" column="79" selection-start-line="188" selection-start-column="79" selection-end-line="188" selection-end-column="79" />
+        <state relative-caret-position="57">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

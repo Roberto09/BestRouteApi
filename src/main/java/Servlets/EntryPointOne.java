@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import util.GoogleMapsApi;
 import util.ShortestPath;
+import util.TimeFunctions;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -51,7 +52,7 @@ public class EntryPointOne extends HttpServlet {
 
             //checking for patameters *order doesn't matter at all for this*
             for(int i = 0; i < pathParams.length; i++){
-                if (pathParams[i] == "time"){
+                if (pathParams[i].equals("time")){
                     pointTimeParameters = true;
                 }
                 if (pathParams[i].equals("hierarchy")) {
@@ -117,10 +118,11 @@ public class EntryPointOne extends HttpServlet {
         pointNodeCollection.setUpPointNodesJson(points, startNode, endNode);
 
         //we get our shortest path as a JsonObject
-        JSONObject returnResponse = ShortestPath.getShortestPath(pointNodeCollection, vehicle);
+        //JSONObject returnResponse = ShortestPath.getShortestPath(pointNodeCollection, vehicle);
+        TimeFunctions.setupTimeWindows(pointNodeCollection);
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.print(returnResponse);
+        out.print(":)");
         out.flush();
 
     }

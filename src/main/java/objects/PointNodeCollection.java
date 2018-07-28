@@ -80,8 +80,8 @@ public class PointNodeCollection {
                 else
                     paramDivisor = rawString.length();
 
-                String formatedDatetime = rawString.substring(0, paramDivisor) + " " + timeZone; //we add the timezone
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
+                String formatedDatetime = rawString.substring(0, paramDivisor); //we add the timezone
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
                 this.arrivalTime = formatter.parseDateTime(formatedDatetime);
             }
 
@@ -136,12 +136,11 @@ public class PointNodeCollection {
 
 
             //if there's a time parameter
-            //format is the same dd/MM/yyyy HH:mm:ss
+            //format is the same dd/MM/yyyy hh:mm:ss
             if(timeParam) {
                 String time = nodeJson.getString("ArrivalTime");
-                String formatedDatetime = time + " " + timeZone; //we add the timezone
-                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
-                this.arrivalTime = formatter.parseDateTime(formatedDatetime);
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss");
+                this.arrivalTime = formatter.parseDateTime(time);
             }
 
             //if there's a hierarchy param
