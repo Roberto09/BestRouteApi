@@ -183,8 +183,9 @@ public class ShortestPath {
         long totalDuration = 0;
 
         //getting solution dimentions for further inspection
-        RoutingDimension capacityDimension = routing.getDimensionOrDie("Capacity");
-
+        RoutingDimension capacityDimension = null;
+        if(pointNodeCollection.packagesParam)
+            capacityDimension = routing.getDimensionOrDie("Capacity");
 
         //for loop to get the best path for each route
         for(int routeNum = 0; routeNum < numRoutes; routeNum ++) {
@@ -193,12 +194,13 @@ public class ShortestPath {
             long index = routing.start(routeNum);
 
             //individual route variables
-            String latLng = null;
-            String name = null;
+            Integer nodeIndex;
+            Integer nextNodeIndex;
+            String latLng;
+            String name;
             Integer hierarchy = null;
             Long packageUnities = null;
-            Integer nodeIndex = null;
-            Integer nextNodeIndex = null;
+
             while (!routing.isEnd(index)) {
                 //getting index of the routing node
                 nodeIndex = routing.IndexToNode(index);
@@ -212,11 +214,14 @@ public class ShortestPath {
                 latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
 
                 //setting our hierarchy
-                hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
+                if(pointNodeCollection.hierarchyParam)
+                    hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
 
-                //setting out package unities (cumul + transit var)
-                IntVar loadVar2 = capacityDimension.cumulVar(index);
-                packageUnities = assignment.value(loadVar2);
+                //setting out package unities cumul
+                if(pointNodeCollection.packagesParam){
+                    IntVar loadVar = capacityDimension.cumulVar(index);
+                    packageUnities = assignment.value(loadVar);
+                }
 
                 //adding resultNode to our routeResults
                 routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));
@@ -239,11 +244,14 @@ public class ShortestPath {
             latLng = pointNodeCollection.pointNodes[nodeIndex].getLatLngStr();
 
             //setting our hierarchy
-            hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
+            if(pointNodeCollection.hierarchyParam)
+                hierarchy = pointNodeCollection.pointNodes[nodeIndex].getHierarchy();
 
-            //setting out package unities ---transit var would be 0 since there's not a node after the last one
-            IntVar loadVar2 = capacityDimension.cumulVar(index);
-            packageUnities = assignment.value(loadVar2);
+            //setting out package unities
+            if(pointNodeCollection.packagesParam){
+                IntVar loadVar = capacityDimension.cumulVar(index);
+                packageUnities = assignment.value(loadVar);
+            }
 
             //adding resultNode to our routeResults
             routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));

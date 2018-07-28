@@ -36,6 +36,10 @@ public class EntryPointOne extends HttpServlet {
         JSONObject startNode = null;
         JSONObject endNode = null;
 
+        //setup vehicle default values
+        Long vehicleCapacity = null;
+        Integer numberOfVehicles = null;
+
         //request variables
         JSONObject jsonRequest = null;
         StringBuffer jb = new StringBuffer();
@@ -80,15 +84,12 @@ public class EntryPointOne extends HttpServlet {
         if(pointTimeParameters){
             timeZone = jsonRequest.getString("timeZone");
         }
-        //Getting out vehicle info
-        if(pointPackageParameters){
-            Long vehicleCapacity = jsonRequest.getLong("vehicleCapacity");
-            Integer numberOfVehicles = jsonRequest.getInt("numberOfVehicles");
-            vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
+        //Getting out package parameters dependent info
+        if(pointPackageParameters && jsonRequest.has("vehicleCapacity")){
+            vehicleCapacity = jsonRequest.getLong("vehicleCapacity");
         }
 
         //Seeing if the client added a start node and or an endnode
-
         if(jsonRequest.has("startPoint")) {
             startNode = jsonRequest.getJSONObject("startPoint");
             routeHasStartNode = true;
@@ -98,6 +99,14 @@ public class EntryPointOne extends HttpServlet {
             endNode = jsonRequest.getJSONObject("endPoint");
             routeHasEndNode = true;
         }
+
+        //seeing if client added a number of vehicles
+        if(jsonRequest.has("numberOfVehicles")){
+            numberOfVehicles = jsonRequest.getInt("numberOfVehicles");
+        }
+
+        //setting up vehicle with variables
+        vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
 
         //getting Json Array of points
         JSONArray points = jsonRequest.getJSONArray("points");
@@ -133,6 +142,10 @@ public class EntryPointOne extends HttpServlet {
         String startNode;
         String endNode;
 
+        //setup vehicle default values
+        Long vehicleCapacity = null;
+        Integer numberOfVehicles = null;
+
         //setup the pathParams info
         String info = request.getPathInfo();
         if(info != null){
@@ -150,18 +163,8 @@ public class EntryPointOne extends HttpServlet {
                 }
                 if (pathParams[i].equals("packages")) {
                     pointPackageParameters = true;
-                    String vehicleCapacityStr = request.getParameter("vehicleCapacity");
-                    String numberOfVehiclesStr = request.getParameter("numberOfVehicles");
-                    Long vehicleCapacity = null;
-                    Integer numberOfVehicles = null;
-
-                    if(vehicleCapacityStr != null)
-                        vehicleCapacity = Long.parseLong(vehicleCapacityStr);
-
-                    if(numberOfVehiclesStr != null)
-                        numberOfVehicles = Integer.parseInt(numberOfVehiclesStr);
-
-                    vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
+                    if(request.getParameter("vehicleCapacity") != null)
+                        vehicleCapacity = Long.parseLong(request.getParameter("vehicleCapacity"));
 
                 }
             }
@@ -178,6 +181,12 @@ public class EntryPointOne extends HttpServlet {
         if(endNode != null)
             routeHasEndNode = true;
 
+        //seeing if client added a number of vehicles
+        if(request.getParameter("numberOfVehicles") != null)
+            numberOfVehicles = Integer.parseInt(request.getParameter("numberOfVehicles"));
+
+        //creating our vehicle
+        vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
 
         //First we create our PointNodeCollection which saves common data between nodes and an array of PointNodes
         PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone, routeHasStartNode, routeHasEndNode);
@@ -190,23 +199,6 @@ public class EntryPointOne extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.print(returnResponse);
         out.flush();
-        /*
-        String formatedDatetime = "01/01/2018 10:00:00 PST";
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
-        DateTime x = formatter.parseDateTime(formatedDatetime);
-
-        String formatedDatetime2 = "01/01/2018 10:25:45 PST";
-        DateTime x2 = formatter.parseDateTime(formatedDatetime2);
-
-        int minutes = Minutes.minutesBetween(x, x2).getMinutes();
-        System.out.println(minutes);
-
-        */
-        String formatedDatetime = "01/01/2018 10:00:00 PST";
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm:ss z");
-        DateTime x = formatter.parseDateTime(formatedDatetime);
-        System.out.println("Epoch time: " + x.getMillis() / 1000);
-        System.out.println("Current time not epoch" + DateTime.now());
 
     }
 }
