@@ -118,11 +118,10 @@ public class EntryPointOne extends HttpServlet {
         pointNodeCollection.setUpPointNodesJson(points, startNode, endNode);
 
         //we get our shortest path as a JsonObject
-        //JSONObject returnResponse = ShortestPath.getShortestPath(pointNodeCollection, vehicle);
-        TimeFunctions.setupTimeWindows(pointNodeCollection);
+        JSONObject returnResponse = ShortestPath.getShortestPath(pointNodeCollection, vehicle);
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.print(":)");
+        out.print(returnResponse);
         out.flush();
 
     }

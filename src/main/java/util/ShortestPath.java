@@ -6,6 +6,8 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.ortools.constraintsolver.*;
 import objects.PointNodeCollection;
 import objects.TransportationVehicle;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,9 +29,8 @@ public class ShortestPath {
         }
     }
 
-
     //Method that creates Json Object with node in route information
-    private static JSONObject createNodeJson(String latLng, String name, Integer hierarchy, Long packageUnities, Long time){
+    private static JSONObject createNodeJson(String latLng, String name, Integer hierarchy, Long packageUnities, Long time, Long timeMin, Long timeMax){
         JSONObject object = new JSONObject();
         object.put("latLng", latLng);
         object.put("name", name);
@@ -38,17 +39,21 @@ public class ShortestPath {
             object.put("hierarchy", hierarchy);
         if(packageUnities != null)
             object.put("packageLoad", packageUnities);
+
+        if(timeMin != null && timeMax != null){
+            object.put("minimalArrivalTime", timeMin);
+            object.put("maximumArrivalTime", timeMax);
+        }
         return object;
     }
-
 
     //Distance callback which returns the time between two given points
     public static class CreateTimeCallback extends NodeEvaluator2 {
         DistanceMatrix distanceAndTimeMatrix;
 
-        public CreateTimeCallback(DistanceMatrix distanceMatrix){
+        public CreateTimeCallback(DistanceMatrix distanceAndTimeMatrix){
             super();
-            this.distanceAndTimeMatrix = distanceMatrix;
+            this.distanceAndTimeMatrix = distanceAndTimeMatrix;
         }
 
         @Override
@@ -58,8 +63,8 @@ public class ShortestPath {
 
     }
 
-   //Demand Evaluator for capacity constraints
-   public static class CreateDemandEvaluator extends NodeEvaluator2{
+    //Demand Evaluator for capacity constraints
+    public static class CreateDemandEvaluator extends NodeEvaluator2{
         PointNodeCollection pointNodeCollection;
 
         public CreateDemandEvaluator(PointNodeCollection pointNodeCollection){
@@ -77,8 +82,7 @@ public class ShortestPath {
             System.out.println(value);
             return value;
        }
-   }
-
+    }
 
     //Evaluator for hierarchy constraints
     public static class CreateHierarchyEvaluator extends NodeEvaluator2{
@@ -90,10 +94,25 @@ public class ShortestPath {
 
         @Override
         public long run(int firstIndex, int secondIndex) {
-            if(pointNodeCollection.pointNodes[firstIndex].getHierarchy() <= pointNodeCollection.pointNodes[secondIndex].getHierarchy() || secondIndex == pointNodeCollection.routeStartPosition)
+            if(pointNodeCollection.pointNodes[firstIndex].getHierarchy().intValue() <= pointNodeCollection.pointNodes[secondIndex].getHierarchy().intValue() || secondIndex == pointNodeCollection.routeStartPosition)
                 return 0;
             else
                 return 1;
+        }
+    }
+
+    //Evaluator for time window contraints
+    public static class CreateTimeEvaluator extends NodeEvaluator2{
+        DistanceMatrix distanceAndTimeMatrix;
+
+        public CreateTimeEvaluator(DistanceMatrix distanceAndTimeMatrix){
+            super();
+            this.distanceAndTimeMatrix = distanceAndTimeMatrix;
+        }
+
+        @Override
+        public long run(int firstIndex, int secondIndex) {
+            return (long)distanceAndTimeMatrix.rows[firstIndex].elements[secondIndex].durationInTraffic.inSeconds;
         }
     }
 
@@ -107,7 +126,7 @@ public class ShortestPath {
                         "Capacity");
     }
 
-    //Method that defines the dimensiton of thehierarchy constraint
+    //Method that defines the dimensiton of the hierarchy constraint
     public static void addHierarchyConstraint(RoutingModel routing, CreateHierarchyEvaluator hierarchyEvaluator){
         routing.addDimension
                         (hierarchyEvaluator,
@@ -115,6 +134,33 @@ public class ShortestPath {
                         0,
                         true, //start cumul at 0
                         "Hierarchy");
+    }
+
+    //Method that defines the dimenion of the TimeWindow contraint
+    public static void addTimeWindowConstraint(RoutingModel routing, CreateTimeEvaluator timeEvaluator, TransportationVehicle vehicle, long[][] timeWindows, PointNodeCollection pointNodeCollection){
+        //horizon in seconds
+        Long horizon = 1532817137L + 2200; //2 hours in other words
+        System.out.println("horizon time" + horizon);
+        routing.addDimension
+                        (timeEvaluator,
+                        horizon,
+                        horizon,
+                        false, //don't force start cumul to zero since we are giving TW to start nodes
+                        "TimeWindow");
+        RoutingDimension timeWindowDimension = routing.getDimensionOrDie("TimeWindow");
+
+        for(int i = 0; i < timeWindows.length; i++) {
+            if(i == pointNodeCollection.routeStartPosition || i == pointNodeCollection.routeEndPosition)
+                continue;
+            long index = routing.NodeToIndex(i);
+            System.out.println("twconstraint" + timeWindows[i][0] + " " + timeWindows[i][1]);
+            timeWindowDimension.cumulVar(index).setRange(timeWindows[i][0], timeWindows[i][1]);
+        }
+        for(int i = 0; i < vehicle.getNumberOfVehicles(); i++){
+            long index = routing.start(i);
+            System.out.println("start index: " + index);
+            timeWindowDimension.cumulVar(index).setRange(timeWindows[pointNodeCollection.routeStartPosition][0], timeWindows[pointNodeCollection.routeStartPosition][1]);
+        }
     }
 
     //get shortest path method which calculates the shortest path for the given points and conditions sent by the client
@@ -155,6 +201,10 @@ public class ShortestPath {
             if(pointNodeCollection.hierarchyParam)
                 addHierarchyConstraint(routing, new CreateHierarchyEvaluator(pointNodeCollection));
 
+            //Adding TimeWindowConstraint to the routing model if neccesary
+            if (pointNodeCollection.timeParam)
+                addTimeWindowConstraint(routing, new CreateTimeEvaluator(distanceAndTimeMatrix), vehicle, TimeFunctions.setupTimeWindows(pointNodeCollection), pointNodeCollection);
+
             //executing routing model and printing results
             Assignment assignment = routing.solveWithParameters(searchParameters);
             if(assignment != null){
@@ -184,8 +234,12 @@ public class ShortestPath {
 
         //getting solution dimentions for further inspection
         RoutingDimension capacityDimension = null;
+        RoutingDimension timeWindowDimension = null;
         if(pointNodeCollection.packagesParam)
             capacityDimension = routing.getDimensionOrDie("Capacity");
+
+        if(pointNodeCollection.timeParam)
+            timeWindowDimension = routing.getDimensionOrDie("TimeWindow");
 
         //for loop to get the best path for each route
         for(int routeNum = 0; routeNum < numRoutes; routeNum ++) {
@@ -200,6 +254,7 @@ public class ShortestPath {
             String name;
             Integer hierarchy = null;
             Long packageUnities = null;
+            Long timeMin = null, timeMax = null;
 
             while (!routing.isEnd(index)) {
                 //getting index of the routing node
@@ -223,8 +278,15 @@ public class ShortestPath {
                     packageUnities = assignment.value(loadVar);
                 }
 
+                //setting out time windows
+                if(pointNodeCollection.timeParam){
+                    IntVar timeWindowVar = timeWindowDimension.cumulVar(index);
+                    timeMin = assignment.min(timeWindowVar);
+                    timeMax = assignment.max(timeWindowVar);
+                }
+
                 //adding resultNode to our routeResults
-                routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));
+                routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration, timeMin, timeMax));
                 //adding our route duration the duration in seconds of the nodeIndex to the nextNodeIndex;
                 routeDuration += distanceAndTimeMatrix.rows[nodeIndex].elements[nextNodeIndex].durationInTraffic.inSeconds;
 
@@ -253,8 +315,15 @@ public class ShortestPath {
                 packageUnities = assignment.value(loadVar);
             }
 
+            //setting out time windows
+            if(pointNodeCollection.timeParam){
+                IntVar timeWindowVar = timeWindowDimension.cumulVar(index);
+                timeMin = assignment.min(timeWindowVar);
+                timeMax = assignment.max(timeWindowVar);
+            }
+
             //adding resultNode to our routeResults
-            routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration));
+            routeResults.put(createNodeJson(latLng, name, hierarchy, packageUnities, routeDuration, timeMin, timeMax));
 
             //Setting up json route object
             JSONObject route = new JSONObject();
