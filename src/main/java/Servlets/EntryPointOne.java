@@ -36,6 +36,7 @@ public class EntryPointOne extends HttpServlet {
         TransportationVehicle vehicle = null;
         JSONObject startNode = null;
         JSONObject endNode = null;
+        Long routesMaxTime = null;
 
         //setup vehicle default values
         Long vehicleCapacity = null;
@@ -81,9 +82,12 @@ public class EntryPointOne extends HttpServlet {
             System.out.println("Json not okay");
         }
 
-        //Getting out timezone
+        //Getting out timezone and routesMaxTime
         if(pointTimeParameters){
-            timeZone = jsonRequest.getString("timeZone");
+            if(jsonRequest.has("timeZone"))
+                timeZone = jsonRequest.getString("timeZone");
+            if(jsonRequest.has("routesMaxTime"))
+                routesMaxTime = jsonRequest.getLong("routesMaxTime");
         }
         //Getting out package parameters dependent info
         if(pointPackageParameters && jsonRequest.has("vehicleCapacity")){
@@ -113,7 +117,7 @@ public class EntryPointOne extends HttpServlet {
         JSONArray points = jsonRequest.getJSONArray("points");
 
         //First we create our PointNodeCollection which saves common data between nodes and an array of PointNodes
-        PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone, routeHasStartNode, routeHasEndNode);
+        PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone, routeHasStartNode, routeHasEndNode, routesMaxTime);
         // we setup our PointNode arraylist inside our pointNodeCollection
         pointNodeCollection.setUpPointNodesJson(points, startNode, endNode);
 
@@ -140,8 +144,9 @@ public class EntryPointOne extends HttpServlet {
         //setup of generic point independent variables
         String timeZone = null;
         TransportationVehicle vehicle = null;
-        String startNode;
-        String endNode;
+        String startNode = null;
+        String endNode = null;
+        Long routesMaxTime = null;
 
         //setup vehicle default values
         Long vehicleCapacity = null;
@@ -158,6 +163,9 @@ public class EntryPointOne extends HttpServlet {
                     pointTimeParameters = true;
                     //setup timezone param
                     timeZone = request.getParameter("timeZone");
+                    //setup routesMaxtime
+                    if(request.getParameter("routesMaxTime") != null)
+                        routesMaxTime = Long.parseLong(request.getParameter("routesMaxTime"));
                 }
                 if (pathParams[i].equals("hierarchy")) {
                     pointHierarchyParameters = true;
@@ -190,7 +198,7 @@ public class EntryPointOne extends HttpServlet {
         vehicle = new TransportationVehicle(vehicleCapacity, numberOfVehicles);
 
         //First we create our PointNodeCollection which saves common data between nodes and an array of PointNodes
-        PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone, routeHasStartNode, routeHasEndNode);
+        PointNodeCollection pointNodeCollection = new PointNodeCollection(pointTimeParameters, pointHierarchyParameters, pointPackageParameters, timeZone, routeHasStartNode, routeHasEndNode, routesMaxTime);
         // we setup our PointNode arraylist inside our pointNodeCollection
         pointNodeCollection.setupPointNodes(points, startNode, endNode);
 

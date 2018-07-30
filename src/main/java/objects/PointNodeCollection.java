@@ -18,17 +18,21 @@ public class PointNodeCollection {
     public boolean routeHasStartNode = false; //if there's not one specified it is the first node in the regular points list
     public boolean routeHasEndNode = false; //if there's not one specified it is the first node in the regular points list
     public int routeStartPosition = 0, routeEndPosition = 0; //position in PointNodes array of the start and end point of the route(s)
+    public Long routesMaxTime = Long.MAX_VALUE;
     //array of point nodes
     public PointNode[] pointNodes;
 
 
-    public PointNodeCollection(boolean timeParam, boolean hierarchyParam, boolean packagesParam, String timeZone, boolean routeHasStartNode, boolean routeHasEndNode) {
+    public PointNodeCollection(boolean timeParam, boolean hierarchyParam, boolean packagesParam, String timeZone, boolean routeHasStartNode, boolean routeHasEndNode, Long routesMaxTime) {
         this.timeParam = timeParam;
         this.hierarchyParam = hierarchyParam;
         this.packagesParam = packagesParam;
-        this.timeZone = timeZone;
         this.routeHasStartNode = routeHasStartNode;
         this.routeHasEndNode = routeHasEndNode;
+        if(timeZone != null)
+            this.timeZone = timeZone;
+        if(routesMaxTime != null)
+            this.routesMaxTime = routesMaxTime;
     }
 
     public class PointNode{
@@ -271,7 +275,7 @@ public class PointNodeCollection {
         }
     }
 
-
+    //method that sets up a array of point nodes according to the json nodes that we sent it in POST requests
     public void setUpPointNodesJson(JSONArray nodes, JSONObject startNode, JSONObject endNode){
         int size = nodes.length();
 
