@@ -1,2 +1,5 @@
 #intellij files
 *.iml
+
+#intellij maven generated target folder
+/target
