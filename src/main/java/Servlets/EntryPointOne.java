@@ -1,17 +1,9 @@
 package Servlets;
-import com.google.gson.JsonObject;
-import com.google.maps.model.DistanceMatrix;
 import objects.PointNodeCollection;
 import objects.TransportationVehicle;
-import org.joda.time.DateTime;
-import org.joda.time.Minutes;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import util.GoogleMapsApi;
 import util.ShortestPath;
-import util.TimeFunctions;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 public class EntryPointOne extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -159,7 +150,7 @@ public class EntryPointOne extends HttpServlet {
 
             //checking for patameters *order doesn't matter at all for this*
             for(int i = 0; i < pathParams.length; i++){
-                if (pathParams[i] == "time"){
+                if (pathParams[i].equals("time")){
                     pointTimeParameters = true;
                     //setup timezone param
                     timeZone = request.getParameter("timeZone");

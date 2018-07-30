@@ -20,8 +20,4 @@
         <listener-class>Servlets.OnStart</listener-class>
     </listener>
 
-    <error-page>
-        <location>/404EC.json</location>
-    </error-page>
-
 </web-app>

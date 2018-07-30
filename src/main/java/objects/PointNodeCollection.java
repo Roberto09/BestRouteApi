@@ -18,7 +18,7 @@ public class PointNodeCollection {
     public boolean routeHasStartNode = false; //if there's not one specified it is the first node in the regular points list
     public boolean routeHasEndNode = false; //if there's not one specified it is the first node in the regular points list
     public int routeStartPosition = 0, routeEndPosition = 0; //position in PointNodes array of the start and end point of the route(s)
-    public Long routesMaxTime = Long.MAX_VALUE;
+    public Long routesMaxTime = 2629746L; //1 Month
     //array of point nodes
     public PointNode[] pointNodes;
 
@@ -55,6 +55,8 @@ public class PointNodeCollection {
         // example: 24.872,-100.415|04/06/2018 04:27:32|3|42,PU
         public PointNode(String rawString, boolean start, boolean end){
 
+            System.out.println("raw string ->" + rawString);
+
             //set up of node start and node end (if there is one)
             this.isStart = start;
             this.isEnd = end;
@@ -67,6 +69,8 @@ public class PointNodeCollection {
                 paramDivisor = rawString.indexOf('|');
             else
                 paramDivisor = rawString.length();
+
+            System.out.println("timeParam: " + timeParam);
 
             commaPos = rawString.indexOf(',');
             float lat = Float.parseFloat(rawString.substring(0, commaPos));
