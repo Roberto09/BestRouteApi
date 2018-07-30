@@ -10,11 +10,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" description="        int i = 0;&#10;        //Note, here we are sav..." line="257" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7593c1b1-4726-425c-9bf6-8e5824e7b113" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/util/ShortestPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/util/ShortestPath.java" afterDir="false" />
-    </list>
+    <list default="true" id="7593c1b1-4726-425c-9bf6-8e5824e7b113" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,8 +39,8 @@
       <file leaf-file-name="PointNodeCollection.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="160" selection-start-line="160" selection-end-line="160" />
+            <state relative-caret-position="-2340">
+              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -55,7 +51,7 @@
       <file leaf-file-name="EntryPointOne.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
+            <state relative-caret-position="852">
               <caret line="83" column="69" selection-start-line="83" selection-start-column="54" selection-end-line="83" selection-end-column="69" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -76,7 +72,7 @@
       <file leaf-file-name="ShortestPath.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/util/ShortestPath.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="576">
+            <state relative-caret-position="792">
               <caret line="182" column="83" selection-start-line="182" selection-start-column="67" selection-end-line="182" selection-end-column="83" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -458,6 +454,7 @@
       <workItem from="1532728447837" duration="574000" />
       <workItem from="1532729677765" duration="30280000" />
       <workItem from="1532920588539" duration="4384000" />
+      <workItem from="1532961296756" duration="829000" />
     </task>
     <task id="LOCAL-00001" summary="changed code structure so it could be more moldeable and understandable">
       <created>1530580067130</created>
@@ -484,7 +481,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="250642000" />
+    <option name="totallyTimeSpent" value="251471000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -496,7 +493,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1365" y="-11" width="1922" height="1047" extended-state="6" />
+    <frame x="-1" y="-11" width="1368" height="735" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
@@ -517,9 +515,9 @@
       <window_info anchor="bottom" id="Java Enterprise" order="10" weight="0.32901832" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Version Control" order="12" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34868422" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34833333" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.3267544" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49885845" visible="true" weight="0.15548456" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49885845" visible="true" weight="0.089879155" />
       <window_info id="Web" order="6" sideWeight="0.50114155" side_tool="true" weight="0.22350675" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
@@ -534,8 +532,9 @@
       <window_info anchor="bottom" id="Application Servers" order="7" weight="0.3267544" />
       <window_info id="Designer" order="2" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info id="Image Layers" order="3" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.75877196" />
+      <window_info id="Image Layers" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
@@ -548,19 +547,18 @@
       <window_info anchor="bottom" id="Messages" order="9" weight="0.32785088" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32852563" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49885845" visible="true" weight="0.18423855" />
       <window_info anchor="bottom" id="Java Enterprise" order="10" weight="0.32901832" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" />
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.1746988" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49885845" visible="true" weight="0.18423855" />
       <window_info anchor="right" id="Database" order="5" weight="0.0" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Web" order="6" sideWeight="0.50114155" side_tool="true" weight="0.22350675" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32894737" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5416667" />
     </layout-to-restore>
   </component>
@@ -871,7 +869,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Servlets/EntryPointOne.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
+        <state relative-caret-position="852">
           <caret line="83" column="69" selection-start-line="83" selection-start-column="54" selection-end-line="83" selection-end-column="69" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -881,7 +879,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/util/ShortestPath.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="576">
+        <state relative-caret-position="792">
           <caret line="182" column="83" selection-start-line="182" selection-start-column="67" selection-end-line="182" selection-end-column="83" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -901,8 +899,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/objects/PointNodeCollection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="160" selection-start-line="160" selection-end-line="160" />
+        <state relative-caret-position="-2340">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
