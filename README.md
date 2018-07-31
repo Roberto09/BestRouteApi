@@ -15,6 +15,6 @@ Packaging information for each node
 
 This code is intended to be pulled and deployed on heroku or any server, however, the link for testing purposes is the following:
 
-Try the following link on postman or any other client platform capable of receiving Json format responses -> https://bestrouteapi.herokuapp.com/EntryPointOne/packages/hierarchy?point=25.644726,-100.291025|1|2,PU&point=25.699910,-100.362560|2|2,DE&point=25.657399,%20-100.256759|1|2,PU&vehicleCapacity=10&numberOfVehicles=1&point=25.669122,%20-100.284095|3|2,DE
+Try the following link on postman or any other client platform capable of receiving Json format responses -> https://bestrouteapi.herokuapp.com/EntryPointOne/packages/hierarchy?point=25.644726,-100.291025%7C1%7C2,PU&point=25.699910,-100.362560%7C2%7C2,DE&point=25.657399,%20-100.256759%7C1%7C2,PU&vehicleCapacity=10&numberOfVehicles=2&point=25.669122,%20-100.284095%7C3%7C2,DE
 
 The code is all documented in case you have a doubt of how does it work. If you notice anything strange or that can improve feel free to email me at roberto.gt1509@gmail.com.
