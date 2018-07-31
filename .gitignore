@@ -3,3 +3,4 @@
 
 #intellij maven generated target folder
 /target
+/.idea

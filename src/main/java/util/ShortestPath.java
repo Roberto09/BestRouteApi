@@ -1,7 +1,5 @@
 package util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.maps.model.DistanceMatrix;
 import com.google.ortools.constraintsolver.*;
 import objects.PointNodeCollection;
@@ -11,7 +9,6 @@ import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
