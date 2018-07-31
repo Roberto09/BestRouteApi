@@ -19,7 +19,7 @@ public class ShortestPath {
 
     //static {System.loadLibrary("jniortools");}
 
-    static { System.load("/home/roberto/Desktop/Tests/Test7/target/classes/libjniortools.so"); }
+    static { System.load("/app/src/main/resources/libjniortools.so"); }
 
     public static void showLibraryPaths(){
         String property = System.getProperty("java.library.path");
@@ -139,7 +139,7 @@ public class ShortestPath {
     //Method that defines the dimenion of the TimeWindow contraint
     public static void addTimeWindowConstraint(RoutingModel routing, CreateTimeEvaluator timeEvaluator, TransportationVehicle vehicle, long[][] timeWindows, PointNodeCollection pointNodeCollection){
         //horizon in seconds
-        Long horizon = 1532817137L + pointNodeCollection.routesMaxTime; //2 hours in other words
+        Long horizon = (DateTime.now().withZone(DateTimeZone.forID(pointNodeCollection.timeZone)).getMillis() / 1000) + pointNodeCollection.routesMaxTime;
         System.out.println("horizon time" + horizon);
         routing.addDimension
                         (timeEvaluator,

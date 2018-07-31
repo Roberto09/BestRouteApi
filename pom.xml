@@ -7,7 +7,7 @@
   <groupId>Test7</groupId>
   <artifactId>Test7</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
 
   <name>Test7 Maven Webapp</name>
 
@@ -53,6 +53,16 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.3</version>
+        </plugin>
+        <plugin>
+          <groupId>com.heroku.sdk</groupId>
+          <artifactId>heroku-maven-plugin</artifactId>
+          <version>2.0.3</version>
+          <configuration>
+              <includes>
+                  <include>src/main/resources/</include>
+              </includes>
+          </configuration>
         </plugin>
       </plugins>
   </build>

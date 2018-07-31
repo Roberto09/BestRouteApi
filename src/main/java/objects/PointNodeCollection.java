@@ -136,7 +136,7 @@ public class PointNodeCollection {
             this.isEnd = end;
 
             //setup latitude longitude with latLngString
-            latLngStr = nodeJson.getString("LatLng");//aki me kede truena si es minusculas
+            latLngStr = nodeJson.getString("LatLng");
             int commaPos = latLngStr.indexOf(',');
             float lat = Float.parseFloat(latLngStr.substring(0, commaPos));
             float lng = Float.parseFloat(latLngStr.substring(commaPos + 1, latLngStr.length()));

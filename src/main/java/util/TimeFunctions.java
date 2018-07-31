@@ -7,8 +7,8 @@ import org.joda.time.DateTimeZone;
 public class TimeFunctions {
 
     public static long[][] setupTimeWindows(PointNodeCollection pointNodeCollection){
-        //long startTime = DateTime.now().withZone(DateTimeZone.forID(pointNodeCollection.timeZone)).getMillis() / 1000;
-        long startTime = 1532817137L;
+        long startTime = DateTime.now().withZone(DateTimeZone.forID(pointNodeCollection.timeZone)).getMillis() / 1000;
+        //long startTime = 1532817137L;
 
         System.out.println("Time Windows: TZ = " + pointNodeCollection.timeZone + " -----------------------------------------");
         long[][] timeWindows = new long[pointNodeCollection.pointNodes.length][];
