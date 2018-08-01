@@ -135,7 +135,7 @@ public class ShortestPath {
     //Method that defines the dimenion of the TimeWindow contraint
     public static void addTimeWindowConstraint(RoutingModel routing, CreateTimeEvaluator timeEvaluator, TransportationVehicle vehicle, long[][] timeWindows, PointNodeCollection pointNodeCollection){
         //horizon in seconds
-        Long horizon = (new LocalTime(DateTimeZone.forID(pointNodeCollection.timeZone)).toDateTimeToday(DateTimeZone.forID("GMT")).getMillis() / 1000) + pointNodeCollection.routesMaxTime;
+        Long horizon = (DateTime.now().withZone(DateTimeZone.forID(pointNodeCollection.timeZone)).toLocalDateTime().toDateTime(DateTimeZone.UTC).getMillis() / 1000) + pointNodeCollection.routesMaxTime;
         System.out.println("Timezone ->" + pointNodeCollection.timeZone);
         System.out.println("horizon time" + horizon);
         routing.addDimension
