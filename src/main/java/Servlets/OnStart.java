@@ -9,6 +9,7 @@ public class OnStart implements ServletContextListener
 {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         setUpGoogleApi();
+        System.load("/app/src/main/resources/libjniortools.so");
     }//end contextInitialized method
 
 

@@ -13,7 +13,7 @@ import org.joda.time.DateTime;
 import java.io.IOException;
 
 public class GoogleMapsApi {
-    public static String apiKey = "AIzaSyAjy7rrVcb2H3fwCSWR0W407OEW0-yfoLg";
+    public static String apiKey = "-----YOUR API KEY----";
     public static GeoApiContext context;
 
     public static void setUpGoogleApi(){

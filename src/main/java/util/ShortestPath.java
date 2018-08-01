@@ -6,6 +6,7 @@ import objects.PointNodeCollection;
 import objects.TransportationVehicle;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,8 +16,6 @@ import java.util.StringTokenizer;
 public class ShortestPath {
 
     //static {System.loadLibrary("jniortools");}
-
-    static { System.load("/app/src/main/resources/libjniortools.so"); }
 
     public static void showLibraryPaths(){
         String property = System.getProperty("java.library.path");
@@ -136,7 +135,8 @@ public class ShortestPath {
     //Method that defines the dimenion of the TimeWindow contraint
     public static void addTimeWindowConstraint(RoutingModel routing, CreateTimeEvaluator timeEvaluator, TransportationVehicle vehicle, long[][] timeWindows, PointNodeCollection pointNodeCollection){
         //horizon in seconds
-        Long horizon = (DateTime.now().withZone(DateTimeZone.forID(pointNodeCollection.timeZone)).getMillis() / 1000) + pointNodeCollection.routesMaxTime;
+        Long horizon = (new LocalTime(DateTimeZone.forID(pointNodeCollection.timeZone)).toDateTimeToday(DateTimeZone.forID("GMT")).getMillis() / 1000) + pointNodeCollection.routesMaxTime;
+        System.out.println("Timezone ->" + pointNodeCollection.timeZone);
         System.out.println("horizon time" + horizon);
         routing.addDimension
                         (timeEvaluator,
